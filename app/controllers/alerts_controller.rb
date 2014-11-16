@@ -2,6 +2,7 @@ class AlertsController < ApplicationController
 
   before_filter :get_parent
   before_filter :authorize, :only => [:new, :edit, :delete, :create, :update, :destroy]
+  before_action :set_alert, only: [:destroy, :show, :edit, :update]
 
   # GET /alerts
   # GET /alerts.xml
@@ -66,12 +67,6 @@ class AlertsController < ApplicationController
   # GET /alerts/1
  # GET /alerts/1.xml
   def show
-    @alert = Alert.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @alert }
-    end
   end
 
   # GET /alerts/new
@@ -87,13 +82,12 @@ class AlertsController < ApplicationController
 
   # GET /alerts/1/edit
   def edit
-    @alert = Alert.find(params[:id])
   end
 
   # POST /alerts
   # POST /alerts.xml
   def create
-    @alert = Alert.new(params[:alert])
+    @alert = Alert.new(alert_params)
 
     respond_to do |format|
       if @alert.save
@@ -110,10 +104,8 @@ class AlertsController < ApplicationController
   # PUT /alerts/1
   # PUT /alerts/1.xml
   def update
-    @alert = Alert.find(params[:id])
-
     respond_to do |format|
-      if @alert.update_attributes(params[:alert])
+      if @alert.update_attributes(alert_params)
         flash[:notice] = 'Alert was successfully updated.'
         format.html { redirect_to(@alert) }
         format.xml  { head :ok }
@@ -127,7 +119,6 @@ class AlertsController < ApplicationController
   # DELETE /alerts/1
   # DELETE /alerts/1.xml
   def destroy
-    @alert = Alert.find(params[:id])
     @alert.destroy
 
     respond_to do |format|
@@ -165,6 +156,16 @@ private
   #get filter object from session or create it
   def find_filter
     session[:alertFilter] ||= AlertFilter.new
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_alert
+    @alert = Alert.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def alert_params
+    params.require(:alert).permit(:date_start, :date_end, :check_status, :service_output, :service_perfdata, :duration, :service_id, :report_id, :host_id)
   end
 
 end

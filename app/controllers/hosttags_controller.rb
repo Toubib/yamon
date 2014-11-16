@@ -1,6 +1,7 @@
 class HosttagsController < ApplicationController
 
   before_filter :authorize, :only => [:new, :edit, :delete, :create, :update, :destroy, :tag, :untag]
+  before_action :set_hosttag, only: [:destroy, :show, :edit, :update]
 
   # GET /hosttags
   # GET /hosttags.xml
@@ -16,12 +17,6 @@ class HosttagsController < ApplicationController
   # GET /hosttags/1
   # GET /hosttags/1.xml
   def show
-    @hosttag = Hosttag.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @hosttag }
-    end
   end
 
   # GET /hosttags/new
@@ -37,13 +32,12 @@ class HosttagsController < ApplicationController
 
   # GET /hosttags/1/edit
   def edit
-    @hosttag = Hosttag.find(params[:id])
   end
 
   # POST /hosttags
   # POST /hosttags.xml
   def create
-    @hosttag = Hosttag.new(params[:hosttag])
+    @hosttag = Hosttag.new(hosttag_params)
 
     respond_to do |format|
       if @hosttag.save
@@ -60,10 +54,8 @@ class HosttagsController < ApplicationController
   # PUT /hosttags/1
   # PUT /hosttags/1.xml
   def update
-    @hosttag = Hosttag.find(params[:id])
-
     respond_to do |format|
-      if @hosttag.update_attributes(params[:hosttag])
+      if @hosttag.update_attributes(hosttag_params)
         flash[:notice] = 'Hosttag was successfully updated.'
         format.html { redirect_to(@hosttag) }
         format.xml  { head :ok }
@@ -77,7 +69,6 @@ class HosttagsController < ApplicationController
   # DELETE /hosttags/1
   # DELETE /hosttags/1.xml
   def destroy
-    @hosttag = Hosttag.find(params[:id])
     @hosttag.destroy
 
     respond_to do |format|
@@ -85,4 +76,17 @@ class HosttagsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_hosttag
+    @hosttag = Hosttag.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def hosttag_params
+    params.require(:hosttag).permit(:name, :description, :css_classes)
+  end
+
 end

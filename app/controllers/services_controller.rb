@@ -1,6 +1,7 @@
 class ServicesController < ApplicationController
 
   before_filter :authorize, :only => [:new, :edit, :delete, :create, :update, :destroy, :tag, :untag]
+  before_action :set_service, only: [:destroy, :show, :edit, :update]
 
   # GET /services
   # GET /services.xml
@@ -17,12 +18,6 @@ class ServicesController < ApplicationController
   # GET /services/1
   # GET /services/1.xml
   def show
-    @service = Service.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @service }
-    end
   end
 
   # GET /services/new
@@ -38,13 +33,12 @@ class ServicesController < ApplicationController
 
   # GET /services/1/edit
   def edit
-    @service = Service.find(params[:id])
   end
 
   # POST /services
   # POST /services.xml
   def create
-    @service = Service.new(params[:service])
+    @service = Service.new(service_params)
 
     respond_to do |format|
       if @service.save
@@ -61,10 +55,9 @@ class ServicesController < ApplicationController
   # PUT /services/1
   # PUT /services/1.xml
   def update
-    @service = Service.find(params[:id])
 
     respond_to do |format|
-      if @service.update_attributes(params[:service])
+      if @service.update_attributes(service_params)
         flash[:notice] = 'Service was successfully updated.'
         format.html { redirect_to(@service) }
         format.xml  { head :ok }
@@ -78,7 +71,6 @@ class ServicesController < ApplicationController
   # DELETE /services/1
   # DELETE /services/1.xml
   def destroy
-    @service = Service.find(params[:id])
     @service.destroy
 
     respond_to do |format|
@@ -110,6 +102,18 @@ class ServicesController < ApplicationController
 #					:service_id => params[:report_id]})
     flash[:notice] = "Tag removed"
     redirect_to :action => :edit, :id => params[:service_id]
+  end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_service
+    @service = Service.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def service_params
+    params.require(:service).permit(:name, :host_id, :notification_delay)
   end
 
 end

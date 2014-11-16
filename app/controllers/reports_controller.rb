@@ -1,6 +1,7 @@
 class ReportsController < ApplicationController
 
   before_filter :authorize, :only => [:new, :edit, :delete, :create, :update, :destroy, :tag, :untag]
+  before_action :set_report, only: [:destroy, :show, :edit, :update]
 
   # GET /reports
   # GET /reports.xml
@@ -16,12 +17,6 @@ class ReportsController < ApplicationController
   # GET /reports/1
   # GET /reports/1.xml
   def show
-    @report = Report.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @report }
-    end
   end
 
   # GET /reports/new
@@ -37,13 +32,12 @@ class ReportsController < ApplicationController
 
   # GET /reports/1/edit
   def edit
-    @report = Report.find(params[:id])
   end
 
   # POST /reports
   # POST /reports.xml
   def create
-    @report = Report.new(params[:report])
+    @report = Report.new(report_params)
 
     respond_to do |format|
       if @report.save
@@ -60,10 +54,8 @@ class ReportsController < ApplicationController
   # PUT /reports/1
   # PUT /reports/1.xml
   def update
-    @report = Report.find(params[:id])
-
     respond_to do |format|
-      if @report.update_attributes(params[:report])
+      if @report.update_attributes(report_params)
         flash[:notice] = 'Report was successfully updated.'
         format.html { redirect_to(@report) }
         format.xml  { head :ok }
@@ -77,7 +69,6 @@ class ReportsController < ApplicationController
   # DELETE /reports/1
   # DELETE /reports/1.xml
   def destroy
-    @report = Report.find(params[:id])
     @report.destroy
 
     respond_to do |format|
@@ -104,4 +95,17 @@ class ReportsController < ApplicationController
     flash[:notice] = "Tag removed"
     redirect_to :action => :edit, :id => params[:report_id]
   end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_report
+    @report = Report.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def report_params
+    params.require(:report).permit(:label, :description, :estimated_date, :select_priority)
+  end
+
 end

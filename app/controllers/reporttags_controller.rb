@@ -1,6 +1,7 @@
 class ReporttagsController < ApplicationController
 
   before_filter :authorize, :only => [:new, :edit, :delete, :create, :update, :destroy]
+  before_action :set_reporttag, only: [:destroy, :show, :edit, :update]
 
   # GET /reporttags
   # GET /reporttags.xml
@@ -16,12 +17,6 @@ class ReporttagsController < ApplicationController
   # GET /reporttags/1
   # GET /reporttags/1.xml
   def show
-    @reporttag = Reporttag.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @reporttag }
-    end
   end
 
   # GET /reporttags/new
@@ -37,13 +32,12 @@ class ReporttagsController < ApplicationController
 
   # GET /reporttags/1/edit
   def edit
-    @reporttag = Reporttag.find(params[:id])
   end
 
   # POST /reporttags
   # POST /reporttags.xml
   def create
-    @reporttag = Reporttag.new(params[:reporttag])
+    @reporttag = Reporttag.new(reporttag_params)
 
     respond_to do |format|
       if @reporttag.save
@@ -60,10 +54,9 @@ class ReporttagsController < ApplicationController
   # PUT /reporttags/1
   # PUT /reporttags/1.xml
   def update
-    @reporttag = Reporttag.find(params[:id])
 
     respond_to do |format|
-      if @reporttag.update_attributes(params[:reporttag])
+      if @reporttag.update_attributes(reporttag_params)
         flash[:notice] = 'Reporttag was successfully updated.'
         format.html { redirect_to(@reporttag) }
         format.xml  { head :ok }
@@ -77,7 +70,6 @@ class ReporttagsController < ApplicationController
   # DELETE /reporttags/1
   # DELETE /reporttags/1.xml
   def destroy
-    @reporttag = Reporttag.find(params[:id])
     @reporttag.destroy
 
     respond_to do |format|
@@ -85,4 +77,17 @@ class ReporttagsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_reporttag
+    @reporttag = Reporttag.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def reporttag_params
+    params.require(:reporttag).permit(:name, :description, :css_classes, :exclude_from_stats)
+  end
+
 end

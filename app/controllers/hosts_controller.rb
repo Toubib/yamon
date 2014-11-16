@@ -1,6 +1,7 @@
 class HostsController < ApplicationController
 
   before_filter :authorize, :only => [:new, :edit, :delete, :create, :update, :destroy, :tag, :untag]
+  before_action :set_host, only: [:destroy, :show, :edit, :update]
 
   # GET /hosts
   # GET /hosts.xml
@@ -16,12 +17,6 @@ class HostsController < ApplicationController
   # GET /hosts/1
   # GET /hosts/1.xml
   def show
-    @host = Host.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @host }
-    end
   end
 
   # GET /hosts/new
@@ -37,13 +32,12 @@ class HostsController < ApplicationController
 
   # GET /hosts/1/edit
   def edit
-    @host = Host.find(params[:id])
   end
 
   # POST /hosts
   # POST /hosts.xml
   def create
-    @host = Host.new(params[:host])
+    @host = Host.new(host_params)
 
     respond_to do |format|
       if @host.save
@@ -60,10 +54,8 @@ class HostsController < ApplicationController
   # PUT /hosts/1
   # PUT /hosts/1.xml
   def update
-    @host = Host.find(params[:id])
-
     respond_to do |format|
-      if @host.update_attributes(params[:host])
+      if @host.update_attributes(host_params)
         flash[:notice] = 'Host was successfully updated.'
         format.html { redirect_to(@host) }
         format.xml  { head :ok }
@@ -77,7 +69,6 @@ class HostsController < ApplicationController
   # DELETE /hosts/1
   # DELETE /hosts/1.xml
   def destroy
-    @host = Host.find(params[:id])
     @host.destroy
 
     respond_to do |format|
@@ -104,6 +95,18 @@ class HostsController < ApplicationController
 #                                       :host_id => params[:report_id]})
     flash[:notice] = "Tag removed"
     redirect_to :action => :edit, :id => params[:host_id]
+  end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_host
+    @host = Host.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def host_params
+    params.require(:host).permit(:name, :notification_delay)
   end
 
 end

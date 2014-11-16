@@ -1,6 +1,7 @@
 class ServicetagsController < ApplicationController
 
   before_filter :authorize, :only => [:new, :edit, :delete, :create, :update, :destroy]
+  before_action :set_servicetag, only: [:destroy, :show, :edit, :update]
 
   # GET /servicetags
   # GET /servicetags.xml
@@ -16,12 +17,6 @@ class ServicetagsController < ApplicationController
   # GET /servicetags/1
   # GET /servicetags/1.xml
   def show
-    @servicetag = Servicetag.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @servicetag }
-    end
   end
 
   # GET /servicetags/new
@@ -37,13 +32,12 @@ class ServicetagsController < ApplicationController
 
   # GET /servicetags/1/edit
   def edit
-    @servicetag = Servicetag.find(params[:id])
   end
 
   # POST /servicetags
   # POST /servicetags.xml
   def create
-    @servicetag = Servicetag.new(params[:servicetag])
+    @servicetag = Servicetag.new(servicetag_params)
 
     respond_to do |format|
       if @servicetag.save
@@ -60,10 +54,8 @@ class ServicetagsController < ApplicationController
   # PUT /servicetags/1
   # PUT /servicetags/1.xml
   def update
-    @servicetag = Servicetag.find(params[:id])
-
     respond_to do |format|
-      if @servicetag.update_attributes(params[:servicetag])
+      if @servicetag.update_attributes(servicetag_params)
         flash[:notice] = 'servicetag was successfully updated.'
         format.html { redirect_to(@servicetag) }
         format.xml  { head :ok }
@@ -77,7 +69,6 @@ class ServicetagsController < ApplicationController
   # DELETE /servicetags/1
   # DELETE /servicetags/1.xml
   def destroy
-    @servicetag = Servicetag.find(params[:id])
     @servicetag.destroy
 
     respond_to do |format|
@@ -85,4 +76,17 @@ class ServicetagsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
+  private
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_servicetag
+    @servicetag = Servicetag.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def servicetag_params
+    params.require(:servicetag).permit(:name, :description, :css_classes)
+  end
+
 end
