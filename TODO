@@ -1,24 +1,5 @@
-#CURRENT VERSION
- - #find a name
- - #service edit page: add a servicetag (astreinte, stats ...)
- - #add hosts tags
- - #some documentation
- - #index page: list of last untagged alert ( time > X )
- - #add a statistic page with a table for each "stats tagged" services
- - #nagios-to-yamon script with host table
- - #import-from-nagios-log script
- - #add alert layout "by day"
- - #test
- - #clean i18n
- - design (Emmanuel !)
- - publish & tag 0.1
-
-#NEXT VERSION
- - #rails 3
-
 #NEXT VERSION
  - add ajax
- - #alert page: add error type (ERROR, WARN, ...) filter
  - page services: add information about nagios monitors (check parameters, still activated ...)
  - import-from-nagios-log: use dedicated table, clean it (date between 2 logs ...)
 
