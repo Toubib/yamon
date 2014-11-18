@@ -9,6 +9,7 @@ gem 'sqlite3'
 gem 'dotiw'
 #gem 'mysql', '2.8.1'
 gem 'jquery-rails'
+gem 'coveralls', require: false
 
 group :development, :test do
 	    gem 'railroady'
