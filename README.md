@@ -1,4 +1,4 @@
-Yamon
+Yamon [![Build Status](https://travis-ci.org/Toubib/yamon.svg?branch=master)](https://travis-ci.org/Toubib/yamon)
 =====
 
 The goal of Yamon is to present services alerts and their reports in a useful and efficient way.
